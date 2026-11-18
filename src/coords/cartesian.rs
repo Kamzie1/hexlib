@@ -16,3 +16,15 @@ impl CartesianCoord {
         AxialCoord::new(q, r)
     }
 }
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn axial() {
+        let cart = CartesianCoord::new(1, 2);
+        let axial = cart.axial();
+        let expected = AxialCoord::new(1, 2);
+        assert_eq!(expected, axial);
+    }
+}

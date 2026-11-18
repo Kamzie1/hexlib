@@ -18,6 +18,12 @@ impl Coord {
         Coord::Axial(AxialCoord::new(q, r))
     }
 
+    pub fn to_cartesian_coord(&self) -> CartesianCoord{
+        match self {
+            Coord::Cartesian(c) => { *c }
+            Coord::Axial(c) => { c.cartesian() }
+        }
+    }
     pub fn to_cartesian(&self) -> Coord {
         match self {
             Coord::Cartesian(_) => { *self }
@@ -25,6 +31,12 @@ impl Coord {
         }
     }
 
+    pub fn to_axial_coord(&self) -> AxialCoord {
+        match self {
+            Coord::Cartesian(c) => { c.axial()}
+            Coord::Axial(c) => { *c }
+        }
+    }
     pub fn to_axial(&self) -> Coord {
         match self {
             Coord::Cartesian(c) => { Coord::Axial(c.axial())}
@@ -101,28 +113,15 @@ impl Coord {
         } else{
             direction
         };
-        // TODO (probably there is a better way to do that)
-        match self {
-            Coord::Cartesian(c) => {
-                let mut a = c.axial();
-                a.q += dir.offset().0 * steps;
-                a.r += dir.offset().1 * steps;
-                Coord::Axial(a)
-            }
-            Coord::Axial(c) => {
-                let mut a = c.clone();
-                a.q += dir.offset().0 * steps;
-                a.r += dir.offset().1 * steps;
-                Coord::Axial(a)
-            }
-        }
-
+        Coord::Axial(self.to_axial_coord().plus(dir.offset().0 * steps, dir.offset().1 * steps))
     }
 }
 
 impl PartialEq for Coord {
     fn eq(&self, other: &Self) -> bool {
-        self.to_cartesian() == other.to_cartesian()
+        let cartesian = self.to_cartesian_coord();
+        let other_cartesian = other.to_cartesian_coord();
+        cartesian == other_cartesian
     }
 }
 

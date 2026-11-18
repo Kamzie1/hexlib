@@ -1,5 +1,4 @@
 pub mod map;
-pub mod position;
 pub mod neighbours;
 mod coords;
 mod directions;
